@@ -4,18 +4,15 @@ resource "docker_image" "nodered_image" {
 }
 
 resource "random_string" "random" {
-  length  = 4
-  special = false
-}
-
-resource "random_string" "random2" {
+  count   = 2
   length  = 4
   special = false
 }
 
 # Start a container
 resource "docker_container" "nodered_container" {
-  name  = join("-", ["nodered", random_string.random.id])
+  count = 2
+  name  = join("-", ["nodered", random_string.random[count.index].id])
   image = docker_image.nodered_image.latest
   ports {
     internal = 1880
@@ -23,12 +20,6 @@ resource "docker_container" "nodered_container" {
   }
 }
 
-resource "docker_container" "nodered_container2" {
-  name  = join("-", ["nodered", random_string.random2.id])
-  image = docker_image.nodered_image.latest
-  ports {
-    internal = 1880
-    # external = 1880
-  }
-}
+
+
 
