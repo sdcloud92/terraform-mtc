@@ -1,10 +1,10 @@
 variable "ext_port" {
   type = list(any)
 
-  # validation {
-  #   condition     = var.ext_port <= 65535 && var.ext_port > 0
-  #   error_message = "The port must be within the valid port range of 0 and 1880"
-  # }
+  validation {
+    condition     = max(var.ext_port...) <= 65535 && min(var.ext_port...) > 0
+    error_message = "The port must be within the valid port range of 0 and 1880"
+  }
 }
 
 variable "int_port" {
