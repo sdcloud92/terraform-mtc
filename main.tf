@@ -27,7 +27,7 @@ resource "docker_container" "nodered_container" {
   }
   volumes {
     container_path = "/data"
-    host_path      = "/home/ubuntu/environment/terraform-mtc/noderedvol"
+    host_path      = "${path.cwd}/noderedvol"
   }
 }
 
