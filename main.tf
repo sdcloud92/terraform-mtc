@@ -6,7 +6,7 @@ resource "null_resource" "docker_volume" {
 
 # Find the latest nodered precise image.
 resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:latest"
+  name = lookup(var.image, var.env)
 }
 
 resource "random_string" "random" {
