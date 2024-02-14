@@ -1,9 +1,3 @@
-variable "env" {
-  type        = string
-  description = "Env to deploy to"
-  default     = "dev"
-}
-
 variable "image" {
   type        = map(any)
   description = "image for container"
@@ -20,8 +14,8 @@ variable "ext_port" {
     condition     = max(var.ext_port["dev"]...) <= 65535 && min(var.ext_port["dev"]...) >= 1980
     error_message = "The port must be within the valid port range of 0 and 1880"
   }
-  
-    validation {
+
+  validation {
     condition     = max(var.ext_port["prod"]...) <= 1980 && min(var.ext_port["prod"]...) >= 1880
     error_message = "The port must be within the valid port range of 0 and 1880"
   }
@@ -38,7 +32,7 @@ variable "int_port" {
 }
 
 locals {
-  container_count = length(lookup(var.ext_port, var.env))
+  container_count = length(lookup(var.ext_port, terraform.workspace))
 }
 
 variable "random_string_count" {
