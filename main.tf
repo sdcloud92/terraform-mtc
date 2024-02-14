@@ -6,7 +6,7 @@ resource "null_resource" "docker_volume" {
 
 # Find the latest nodered precise image.
 resource "docker_image" "nodered_image" {
-  name = lookup(var.image, terraform.workspace)
+  name = var.image[terraform.workspace]
 }
 
 resource "random_string" "random" {
@@ -23,7 +23,7 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    external = lookup(var.ext_port, terraform.workspace)[count.index]
+    external = var.ext_port[terraform.workspace][count.index]
   }
   volumes {
     container_path = "/data"
