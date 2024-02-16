@@ -7,6 +7,7 @@ resource "null_resource" "docker_volume" {
 # Find the latest nodered precise image.
 module "image" {
   source = "./image"
+  image_in = var.image[terraform.workspace]
 }
 
 resource "random_string" "random" {
