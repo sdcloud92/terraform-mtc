@@ -6,7 +6,7 @@ resource "null_resource" "docker_volume" {
 
 # Find the latest nodered precise image.
 module "image" {
-  source = "./image"
+  source   = "./image"
   image_in = var.image[terraform.workspace]
 }
 
@@ -18,18 +18,16 @@ resource "random_string" "random" {
 }
 
 # Start a container
-resource "docker_container" "nodered_container" {
-  count = local.container_count
-  name  = join("-", [var.container_name, terraform.workspace, random_string.random[count.index].id])
-  image = module.image.image_output
-  ports {
-    internal = var.int_port
-    external = var.ext_port[terraform.workspace][count.index]
-  }
-  volumes {
-    container_path = "/data"
-    host_path      = "${path.cwd}/noderedvol"
-  }
+module "container" {
+  source            = "./container"
+  depends_on        = [null_resource.docker_volume]
+  count             = local.container_count
+  name_in           = join("-", [var.container_name, terraform.workspace, random_string.random[count.index].id])
+  image_in          = module.image.image_output
+  int_port_in       = var.int_port
+  ext_port_in       = var.ext_port[terraform.workspace][count.index]
+  container_path_in = "/data"
+  host_path_in      = "${path.cwd}/noderedvol"
 }
 
 
